@@ -4,13 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0e1add73-baed-4fa1-a050-b745b459e82d" name="Changes" comment="First Commit">
+    <list default="true" id="0e1add73-baed-4fa1-a050-b745b459e82d" name="Changes" comment="Test Commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/de/hbrs/ia/code/ManagePersonal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/hbrs/ia/code/ManagePersonal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/hbrs/ia/code/ManagePersonalInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/hbrs/ia/code/ManagePersonalInterface.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/de/hbrs/ia/code/MongoDBConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/hbrs/ia/code/MongoDBConnection.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/de/hbrs/ia/model/SalesMan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/hbrs/ia/model/SalesMan.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/de/hbrs/ia/model/SocialPerformanceRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/hbrs/ia/model/SocialPerformanceRecord.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/de/hbrs/ia/code/MongoDBConnection.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/de/hbrs/ia/code/MongoDBConnection.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/de/hbrs/ia/model/SocialPerformanceRecord.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/de/hbrs/ia/model/SocialPerformanceRecord.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,7 +80,7 @@
       <workItem from="1729428864884" duration="5833000" />
       <workItem from="1729434718029" duration="1054000" />
       <workItem from="1729438787528" duration="8101000" />
-      <workItem from="1729529574742" duration="2074000" />
+      <workItem from="1729529574742" duration="2471000" />
     </task>
     <task id="LOCAL-00001" summary="First Commit">
       <option name="closed" value="true" />
@@ -98,7 +98,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729435637935</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Test Commit">
+      <option name="closed" value="true" />
+      <created>1729531672013</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1729531672013</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -117,6 +125,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="First Commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="First Commit" />
+    <MESSAGE value="Test Commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="Test Commit" />
   </component>
 </project>

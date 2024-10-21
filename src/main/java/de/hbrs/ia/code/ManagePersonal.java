@@ -101,7 +101,7 @@ public class ManagePersonal implements ManagePersonalInterface{
         Integer attitude = record.getInteger("attitude");
         Integer communication = record.getInteger("communication");
         Integer integrity = record.getInteger("integrity");
-        Integer year = record.getInteger("leadership");
+        Integer year = record.getInteger("year");
 
         return new SocialPerformanceRecord(leadership, openness, behaviour, attitude, communication, integrity, year);
     }
