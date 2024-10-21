@@ -2,6 +2,7 @@ package de.hbrs.ia.model;
 
 import org.bson.Document;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class SalesMan {
@@ -15,6 +16,7 @@ public class SalesMan {
         this.firstname = firstname;
         this.lastname = lastname;
         this.sid = sid;
+        this.records = new ArrayList<>();
     }
 
     public String getFirstname() {
@@ -46,9 +48,14 @@ public class SalesMan {
         document.append("firstname" , this.firstname );
         document.append("lastname" , this.lastname );
         document.append("sid" , this.sid);
+        document.append("PerformanceRecords", records);
         return document;
     }
-    public insertPerformanceRecord(){
 
+    public String toString(){
+        return "firstname: " + this.firstname + "\n" +
+                "lastname: " + this.lastname + "\n" +
+                "sid: " + this.sid + "\n";
     }
+
 }
