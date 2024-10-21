@@ -85,5 +85,15 @@ public class SocialPerformanceRecord{
         return document;
     }
 
+    public String toString(){
+        return "leadership: " + this.leadership + "\n" +
+                "openness: " + this.openness + "\n" +
+                "behaviour: " + this.behaviour + "\n" +
+                "attitude: " + this.attitude + "\n" +
+                "communication: " + this.communication + "\n" +
+                "integrity: " + this.integrity + "\n" +
+                "year: " + this.year + "\n";
+    }
+
 
 }

@@ -17,11 +17,22 @@ public class MongoDBConnection {
 
         SocialPerformanceRecord record1= new SocialPerformanceRecord(
         1,1,1,1,1,1,2022);
+        SocialPerformanceRecord record2= new SocialPerformanceRecord(
+                1,1,1,1,1,1,2024);
+        SocialPerformanceRecord record3= new SocialPerformanceRecord(
+                1,1,1,1,1,1,2025);
 
         ManagePersonal controller = new ManagePersonal();
 
         controller.createSalesMan(salesMan1);
         controller.addSocialPerformanceRecord(record1,salesMan1);
+        controller.addSocialPerformanceRecord(record2,salesMan1);
+        controller.addSocialPerformanceRecord(record3,salesMan1);
+
+        ArrayList<SocialPerformanceRecord> records = controller.readSocialPerformanceRecord(salesMan1);
+        for(SocialPerformanceRecord record: records){
+            System.out.println(record);
+        }
 
 
 
