@@ -1,0 +1,241 @@
+Index: src/main/java/de/hbrs/ia/code/MongoDBConnection.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package de.hbrs.ia.code;\r\n\r\nimport com.mongodb.MongoClient;\r\nimport com.mongodb.client.MongoCollection;\r\nimport com.mongodb.client.MongoCursor;\r\nimport com.mongodb.client.MongoDatabase;\r\nimport org.bson.Document;\r\n\r\npublic class MongoDBConnection {\r\n    public static void main(String[] args) {\r\n\r\n        MongoDatabase db = mongoClient.getDatabase(\"Database\");\r\n\r\n\r\n        MongoCursor<String> dbsCursor = mongoClient.listDatabaseNames().iterator();\r\n        while (dbsCursor.hasNext()) {\r\n            System.out.println(dbsCursor.next());\r\n        }\r\n\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/de/hbrs/ia/code/MongoDBConnection.java b/src/main/java/de/hbrs/ia/code/MongoDBConnection.java
+--- a/src/main/java/de/hbrs/ia/code/MongoDBConnection.java	(revision 0d49bf54ef487bd7e384f4378d07bc3c973a5da5)
++++ b/src/main/java/de/hbrs/ia/code/MongoDBConnection.java	(date 1729450449639)
+@@ -1,21 +1,19 @@
+ package de.hbrs.ia.code;
+ 
+-import com.mongodb.MongoClient;
+ import com.mongodb.client.MongoCollection;
+ import com.mongodb.client.MongoCursor;
+ import com.mongodb.client.MongoDatabase;
++import de.hbrs.ia.model.SalesMan;
+ import org.bson.Document;
+ 
+ public class MongoDBConnection {
+     public static void main(String[] args) {
+ 
+-        MongoDatabase db = mongoClient.getDatabase("Database");
++        SalesMan salesMan = new SalesMan("john","Cook",100);
++        ManagePersonal mp = new ManagePersonal();
++        mp.createSalesMan(salesMan);
+ 
+-
+-        MongoCursor<String> dbsCursor = mongoClient.listDatabaseNames().iterator();
+-        while (dbsCursor.hasNext()) {
+-            System.out.println(dbsCursor.next());
+-        }
++        //System.out.println(salesMan.toString());
+ 
+     }
+ }
+Index: src/main/java/de/hbrs/ia/code/ManagePersonal.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package de.hbrs.ia.code;\r\n\r\nimport com.mongodb.MongoClient;\r\nimport com.mongodb.client.MongoCollection;\r\nimport com.mongodb.client.MongoDatabase;\r\nimport de.hbrs.ia.model.SalesMan;\r\nimport de.hbrs.ia.model.SocialPerformanceRecord;\r\nimport org.bson.Document;\r\n\r\nimport java.util.List;\r\n\r\npublic class ManagePersonal implements ManagePersonalInterface{\r\n\r\n    private MongoDatabase db;\r\n    private MongoCollection<Document> salesmenCollection;\r\n\r\n    public ManagePersonal(){\r\n        try(MongoClient mongoClient = new MongoClient(\"localhost\",27017)){\r\n            this.db = mongoClient.getDatabase(\"CompanyDatabase\");\r\n            this.salesmenCollection = db.getCollection(\"salesmen\");\r\n        }\r\n    }\r\n    @Override\r\n    public void createSalesMan(SalesMan record) {\r\n        Document salesMan = record.toDocument();\r\n        salesmenCollection.insertOne(salesMan);\r\n    }\r\n\r\n    @Override\r\n    public void addSocialPerformanceRecord(SocialPerformanceRecord record, SalesMan salesMan) {\r\n\r\n    }\r\n\r\n    @Override\r\n    public SalesMan readSalesMan(int sid) {\r\n        return null;\r\n    }\r\n\r\n    @Override\r\n    public List<SalesMan> readAllSalesMen() {\r\n        return null;\r\n    }\r\n\r\n    @Override\r\n    public List<SocialPerformanceRecord> readSocialPerformanceRecord(SalesMan salesMan) {\r\n        return null;\r\n    }\r\n\r\n    @Override\r\n    public SocialPerformanceRecord readLastSocialPerformanceRecord(SalesMan salesmMan) {\r\n        return null;\r\n    }\r\n\r\n    @Override\r\n    public SocialPerformanceRecord readByYearSocialPerformanceRecord(SalesMan salesMan, int year) {\r\n        return null;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/de/hbrs/ia/code/ManagePersonal.java b/src/main/java/de/hbrs/ia/code/ManagePersonal.java
+--- a/src/main/java/de/hbrs/ia/code/ManagePersonal.java	(revision 0d49bf54ef487bd7e384f4378d07bc3c973a5da5)
++++ b/src/main/java/de/hbrs/ia/code/ManagePersonal.java	(date 1729450190742)
+@@ -6,33 +6,37 @@
+ import de.hbrs.ia.model.SalesMan;
+ import de.hbrs.ia.model.SocialPerformanceRecord;
+ import org.bson.Document;
++import org.bson.types.ObjectId;
+ 
+ import java.util.List;
+ 
+ public class ManagePersonal implements ManagePersonalInterface{
+ 
+     private MongoDatabase db;
++    private MongoClient mongoClient;
+     private MongoCollection<Document> salesmenCollection;
+ 
+     public ManagePersonal(){
+-        try(MongoClient mongoClient = new MongoClient("localhost",27017)){
+-            this.db = mongoClient.getDatabase("CompanyDatabase");
+-            this.salesmenCollection = db.getCollection("salesmen");
++        mongoClient = new MongoClient("localhost",27017);
++            db = mongoClient.getDatabase("CompanyDatabase");
++            salesmenCollection = db.getCollection("salesmen");
+         }
+-    }
++
+     @Override
+-    public void createSalesMan(SalesMan record) {
+-        Document salesMan = record.toDocument();
++    public void createSalesMan(SalesMan newSalesMan) {
++        Document salesMan = newSalesMan.toDocument();
+         salesmenCollection.insertOne(salesMan);
+     }
+ 
+     @Override
+     public void addSocialPerformanceRecord(SocialPerformanceRecord record, SalesMan salesMan) {
+ 
++
+     }
+ 
+     @Override
+     public SalesMan readSalesMan(int sid) {
++
+         return null;
+     }
+ 
+Index: src/main/java/de/hbrs/ia/model/SalesMan.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package de.hbrs.ia.model;\r\n\r\nimport org.bson.Document;\r\n\r\nimport java.util.ArrayList;\r\n\r\npublic class SalesMan {\r\n    private String firstname;\r\n    private String lastname;\r\n    private Integer sid;\r\n\r\n    private ArrayList<SocialPerformanceRecord> records;\r\n\r\n    public SalesMan(String firstname, String lastname, Integer sid) {\r\n        this.firstname = firstname;\r\n        this.lastname = lastname;\r\n        this.sid = sid;\r\n    }\r\n\r\n    public String getFirstname() {\r\n        return firstname;\r\n    }\r\n\r\n    public void setFirstname(String firstname) {\r\n        this.firstname = firstname;\r\n    }\r\n\r\n    public String getLastname() {\r\n        return lastname;\r\n    }\r\n\r\n    public void setLastname(String lastname) {\r\n        this.lastname = lastname;\r\n    }\r\n\r\n    public Integer getId() {\r\n        return sid;\r\n    }\r\n\r\n    public void setId(Integer sid) {\r\n        this.sid = sid;\r\n    }\r\n\r\n    public Document toDocument() {\r\n        org.bson.Document document = new Document();\r\n        document.append(\"firstname\" , this.firstname );\r\n        document.append(\"lastname\" , this.lastname );\r\n        document.append(\"sid\" , this.sid);\r\n        return document;\r\n    }\r\n    public insertPerformanceRecord(){\r\n\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/de/hbrs/ia/model/SalesMan.java b/src/main/java/de/hbrs/ia/model/SalesMan.java
+--- a/src/main/java/de/hbrs/ia/model/SalesMan.java	(revision 0d49bf54ef487bd7e384f4378d07bc3c973a5da5)
++++ b/src/main/java/de/hbrs/ia/model/SalesMan.java	(date 1729449743294)
+@@ -48,7 +48,13 @@
+         document.append("sid" , this.sid);
+         return document;
+     }
+-    public insertPerformanceRecord(){
+ 
++    public String toString(){
++        return "sid:" + this.getId()+
++                "firstname:"+ this.getFirstname()+
++                "lastname:"+this.getLastname();
+     }
++
++
++
+ }
+Index: pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\"\r\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\r\n         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\r\n    <modelVersion>4.0.0</modelVersion>\r\n\r\n    <groupId>org.iar.mongodo</groupId>\r\n    <artifactId>MongoDBStart</artifactId>\r\n    <version>1.0-SNAPSHOT</version>\r\n\r\n    <properties>\r\n        <java.version>11</java.version>\r\n        <maven.compiler.source>11</maven.compiler.source>\r\n        <maven.compiler.target>11</maven.compiler.target>\r\n    </properties>\r\n\r\n    <dependencies>\r\n\r\n    <dependency>\r\n        <groupId>org.junit.jupiter</groupId>\r\n        <artifactId>junit-jupiter-api</artifactId>\r\n        <version>5.8.1</version>\r\n        <scope>test</scope>\r\n    </dependency>\r\n\r\n    <dependency>\r\n        <groupId>org.junit.jupiter</groupId>\r\n        <artifactId>junit-jupiter-engine</artifactId>\r\n        <version>5.8.1</version>\r\n        <scope>test</scope>\r\n    </dependency>\r\n\r\n        <dependency>\r\n            <groupId>org.mongodb</groupId>\r\n            <artifactId>mongodb-driver-sync</artifactId>\r\n            <version>5.2.0</version>\r\n        </dependency>\r\n\r\n        <dependency>\r\n            <groupId>org.mongodb</groupId>\r\n            <artifactId>mongodb-driver-legacy</artifactId>\r\n            <version>4.1.0</version>\r\n        </dependency>\r\n\r\n\r\n    </dependencies>\r\n\r\n\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/pom.xml b/pom.xml
+--- a/pom.xml	(revision 0d49bf54ef487bd7e384f4378d07bc3c973a5da5)
++++ b/pom.xml	(date 1729450292215)
+@@ -36,11 +36,6 @@
+             <version>5.2.0</version>
+         </dependency>
+ 
+-        <dependency>
+-            <groupId>org.mongodb</groupId>
+-            <artifactId>mongodb-driver-legacy</artifactId>
+-            <version>4.1.0</version>
+-        </dependency>
+ 
+ 
+     </dependencies>
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"0e1add73-baed-4fa1-a050-b745b459e82d\" name=\"Changes\" comment=\"First Commit\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2nhcedNy41QVcWdtVlkgJGW06Hj\" />\r\n  <component name=\"ProjectLevelVcsManager\">\r\n    <ConfirmationsSetting value=\"1\" id=\"Add\" />\r\n  </component>\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"RunOnceActivity.OpenProjectViewOnStart\": \"true\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"SHARE_PROJECT_CONFIGURATION_FILES\": \"true\",\r\n    \"WebServerToolWindowFactoryState\": \"false\",\r\n    \"full.screen.before.presentation.mode\": \"false\",\r\n    \"node.js.detected.package.eslint\": \"true\",\r\n    \"node.js.detected.package.tslint\": \"true\",\r\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\r\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\r\n    \"settings.editor.selected.configurable\": \"org.jetbrains.plugins.github.ui.GithubSettingsConfigurable\",\r\n    \"vue.rearranger.settings.migration\": \"true\"\r\n  }\r\n}]]></component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"0e1add73-baed-4fa1-a050-b745b459e82d\" name=\"Changes\" comment=\"\" />\r\n      <created>1729428863703</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1729428863703</updated>\r\n      <workItem from=\"1729428864884\" duration=\"5833000\" />\r\n      <workItem from=\"1729434718029\" duration=\"1054000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"First Commit\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1729435606209</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1729435606209</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"First Commit\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1729435637935</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1729435637935</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"3\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"First Commit\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"First Commit\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 0d49bf54ef487bd7e384f4378d07bc3c973a5da5)
++++ b/.idea/workspace.xml	(date 1729531602789)
+@@ -5,7 +5,12 @@
+   </component>
+   <component name="ChangeListManager">
+     <list default="true" id="0e1add73-baed-4fa1-a050-b745b459e82d" name="Changes" comment="First Commit">
++      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/de/hbrs/ia/code/ManagePersonal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/hbrs/ia/code/ManagePersonal.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/de/hbrs/ia/code/MongoDBConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/hbrs/ia/code/MongoDBConnection.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/de/hbrs/ia/model/SalesMan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/de/hbrs/ia/model/SalesMan.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -25,6 +30,9 @@
+   <component name="MarkdownSettingsMigration">
+     <option name="stateVersion" value="1" />
+   </component>
++  <component name="ProjectColorInfo">{
++  &quot;associatedIndex&quot;: 3
++}</component>
+   <component name="ProjectId" id="2nhcedNy41QVcWdtVlkgJGW06Hj" />
+   <component name="ProjectLevelVcsManager">
+     <ConfirmationsSetting value="1" id="Add" />
+@@ -33,21 +41,44 @@
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent"><![CDATA[{
+-  "keyToString": {
+-    "RunOnceActivity.OpenProjectViewOnStart": "true",
+-    "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+-    "WebServerToolWindowFactoryState": "false",
+-    "full.screen.before.presentation.mode": "false",
+-    "node.js.detected.package.eslint": "true",
+-    "node.js.detected.package.tslint": "true",
+-    "node.js.selected.package.eslint": "(autodetect)",
+-    "node.js.selected.package.tslint": "(autodetect)",
+-    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
+-    "vue.rearranger.settings.migration": "true"
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
++    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
++    &quot;full.screen.before.presentation.mode&quot;: &quot;false&quot;,
++    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
++    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
++    &quot;last_opened_file_path&quot;: &quot;C:/Users/Bertrand Alougou/IdeaProjects/Integration-Architecture&quot;,
++    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
++    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
++    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
++    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
++    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;,
++    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+   }
+-}]]></component>
++}</component>
++  <component name="RunManager">
++    <configuration name="MongoDBConnection" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
++      <option name="MAIN_CLASS_NAME" value="de.hbrs.ia.code.MongoDBConnection" />
++      <module name="MongoDBStart" />
++      <extension name="coverage">
++        <pattern>
++          <option name="PATTERN" value="de.hbrs.ia.code.*" />
++          <option name="ENABLED" value="true" />
++        </pattern>
++      </extension>
++      <method v="2">
++        <option name="Make" enabled="true" />
++      </method>
++    </configuration>
++    <recent_temporary>
++      <list>
++        <item itemvalue="Application.MongoDBConnection" />
++      </list>
++    </recent_temporary>
++  </component>
+   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+   <component name="TaskManager">
+     <task active="true" id="Default" summary="Default task">
+@@ -58,6 +89,10 @@
+       <updated>1729428863703</updated>
+       <workItem from="1729428864884" duration="5833000" />
+       <workItem from="1729434718029" duration="1054000" />
++      <workItem from="1729436679707" duration="1658000" />
++      <workItem from="1729448291952" duration="2497000" />
++      <workItem from="1729450818176" duration="224000" />
++      <workItem from="1729531170466" duration="432000" />
+     </task>
+     <task id="LOCAL-00001" summary="First Commit">
+       <option name="closed" value="true" />
