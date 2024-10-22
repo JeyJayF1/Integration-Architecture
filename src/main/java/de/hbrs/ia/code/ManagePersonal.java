@@ -14,38 +14,42 @@ import java.util.ArrayList;
 public class ManagePersonal implements ManagePersonalInterface{
 
     MongoClient mongoClient = new MongoClient("localhost",27017);
-    MongoDatabase db = mongoClient.getDatabase("CompanyDatabase2");
+    MongoDatabase db = mongoClient.getDatabase("CompanyDatabase");
     MongoCollection<Document> collection = db.getCollection("salesman");
-
-    protected  int sid  ;
     public ManagePersonal(){
 
     }
+    // create a SalesMan Document in the collection by giving a SalesMan object
     @Override
-    public void createSalesMan(SalesMan record) {
-        Document salesMan = record.toDocument();
-        collection.insertOne(salesMan);
+    public void createSalesMan(SalesMan salesMan) {
+        Document salesManDocument = salesMan.toDocument();
+        collection.insertOne(salesManDocument);
     }
 
+    //delete a SalesMan in the collection by sid
     @Override
     public void deleteSalesMan(int sid) {
         collection.deleteOne(new Document("sid", sid));
     }
 
+    //delete all SalesMan Documents in the collection
     @Override
     public void deleteAllSalesMan() {
         collection.deleteMany(new Document());
     }
 
+    // add a SocialPerformanceRecord to a SalesMan, by searching for the SalesMan by sid
+    // and adding a SocialPerformanceRecord into the records ArrayList of the SalesMan
     @Override
     public void addSocialPerformanceRecord(SocialPerformanceRecord record, SalesMan salesMan) {
-        this.sid = salesMan.getId();
+        int sid = salesMan.getId();
 
         Document socialPerformanceRecord = record.toDocument();
         collection.updateOne(new Document("sid",sid), Updates.push
                 ("PerformanceRecords",socialPerformanceRecord));
     }
 
+    // read a SalesMan by sid
     @Override
     public SalesMan readSalesMan(int sid) {
         Document salesmanDocument = collection.find(new Document("sid", sid)).first();
@@ -53,6 +57,7 @@ public class ManagePersonal implements ManagePersonalInterface{
         return salesmanObject;
     }
 
+    // read all SalesMan in the Collection
     @Override
     public ArrayList<SalesMan> readAllSalesMen() {
         ArrayList SalesManList = new ArrayList<SalesMan>();
@@ -65,55 +70,81 @@ public class ManagePersonal implements ManagePersonalInterface{
         return SalesManList;
     }
 
+    // read all SocialPerformanceRecord of a specific SalesMan
     @Override
     public ArrayList<SocialPerformanceRecord> readSocialPerformanceRecord(SalesMan salesMan) {
-        this.sid = salesMan.getId();
+        int sid = salesMan.getId();
         ArrayList PerformanceRecords = new ArrayList<SocialPerformanceRecord>();
         Document salesmanDocument = collection.find(new Document("sid", sid)).first();
-        ArrayList<Document> performanceRecordDocument = (ArrayList<Document>) salesmanDocument.get("PerformanceRecords");
-        for (Document record: performanceRecordDocument){
+        ArrayList<Document> perfromanceRecordDocument = (ArrayList<Document>) salesmanDocument.get("PerformanceRecords");
+        for (Document record: perfromanceRecordDocument){
             SocialPerformanceRecord record1 = toSocialPerformanceRecord(record);
             PerformanceRecords.add(record1);
         }
         return PerformanceRecords;
     }
 
+    // read the last added SocialPerformanceRecord of a specific salesMan
     @Override
     public SocialPerformanceRecord readLastSocialPerformanceRecord(SalesMan salesMan) {
-
-        this.sid = salesMan.getId();
+        int sid = salesMan.getId();
         Document salesmanDocument = collection.find(new Document("sid", sid)).first();
-        ArrayList<Document> performanceRecordDocuments = (ArrayList<Document>) salesmanDocument.get("PerformanceRecords");
-        if(performanceRecordDocuments == null || performanceRecordDocuments.isEmpty()){
+
+        ArrayList<Document> performanceRecordDocument = (ArrayList<Document>) salesmanDocument.get("PerformanceRecords");
+        Document lastSocialPerformanceRecord = performanceRecordDocument.get(performanceRecordDocument.size() - 1);
+
+        return toSocialPerformanceRecord(lastSocialPerformanceRecord);
+
+    }
+
+    // read a year specific SocialPerformanceRecord of a specific salesMan
+    @Override
+    public SocialPerformanceRecord readByYearSocialPerformanceRecord(SalesMan salesMan, int year) {
+        int sid = salesMan.getId();
+        Document salesmanDocument = collection.find(new Document("sid",sid)).first();
+
+        ArrayList<Document> performanceRecordDocument = (ArrayList<Document>) salesmanDocument.get("PerformanceRecords");
+        Document yearSocialPerformanceRecord = null;
+        if(performanceRecordDocument == null || performanceRecordDocument.isEmpty()){
             return null;
         }
-
-        performanceRecordDocuments.sort((doc1, doc2) -> doc2.getInteger("year").compareTo(doc1.getInteger("year"))); //Sort by year descending
-        Document latestRecord = performanceRecordDocuments.get(0); // Get the last one (latest year)
-        return toSocialPerformanceRecord(latestRecord);
+        for(Document performanceRecord : performanceRecordDocument){
+            if(performanceRecord.getInteger("year") == year){
+                yearSocialPerformanceRecord = performanceRecord;
+                break;
+            }
+        }
+        return toSocialPerformanceRecord(yearSocialPerformanceRecord);
     }
 
     @Override
-    public SocialPerformanceRecord readByYearSocialPerformanceRecord(SalesMan salesMan, int year) {
+    public void deleteByYearSocialPerformanceRecord(SalesMan salesMan, int year) {
+        int sid = salesMan.getId();
+        Document salesmanDocument = collection.find(new Document("sid",sid)).first();
+        Document remove = new Document("$pull",new Document("PerformanceRecords",new Document("year",year)));
 
-        this.sid = salesMan.getId();
-        Document salesmanDocument = collection.find(new Document("sid", sid)).first();
-        ArrayList<Document> performanceRecordDocuments = (ArrayList<Document>) salesmanDocument.get("PerformanceRecords");
-        if (performanceRecordDocuments == null || performanceRecordDocuments.isEmpty()) {
-            return null;
-        }
-
-        for (Document record : performanceRecordDocuments) {
-            if (record.getInteger("year") == year) {
-                return toSocialPerformanceRecord(record); // Return the matching record
-            }
-        }
-
-        return null; // No record found for the given year
+        collection.updateOne(salesmanDocument, remove);
 
     }
 
-    public SalesMan toSalesMan(Document salesman){
+    @Override
+    public void deleteLastSocialPerformanceRecord(SalesMan salesMan){
+        int sid = salesMan.getId();
+        Document salesmanDocument = collection.find(new Document("sid",sid)).first();
+        ArrayList<Document> performanceRecordDocument = (ArrayList<Document>) salesmanDocument.get("PerformanceRecords");
+
+        if(performanceRecordDocument == null || performanceRecordDocument.isEmpty()){
+            System.out.println("No PerformanceRecords found");
+        }else{
+            Document lastPerformanceRecord = performanceRecordDocument.get(performanceRecordDocument.size() - 1);
+            Document remove = new Document("$pull",new Document("PerformanceRecords", lastPerformanceRecord));
+
+            collection.updateOne(salesmanDocument, remove);
+        }
+    }
+
+    // methode for turning a SalesMan Document into a SalesMan Object
+    private SalesMan toSalesMan(Document salesman){
         String firstname = salesman.getString("firstname");
         String lastname = salesman.getString("lastname");
         int sid = salesman.getInteger("sid");
@@ -121,7 +152,8 @@ public class ManagePersonal implements ManagePersonalInterface{
         return new SalesMan(firstname, lastname, sid);
     }
 
-    public SocialPerformanceRecord toSocialPerformanceRecord(Document record){
+    // methode for turning a SocialPerformanceRecord Document into a SocialPerformanceRecord Object
+    private SocialPerformanceRecord toSocialPerformanceRecord(Document record){
         Integer leadership = record.getInteger("leadership");
         Integer openness = record.getInteger("openness");
         Integer behaviour = record.getInteger("behaviour");

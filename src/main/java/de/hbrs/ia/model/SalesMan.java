@@ -2,7 +2,6 @@ package de.hbrs.ia.model;
 
 import org.bson.Document;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class SalesMan {
