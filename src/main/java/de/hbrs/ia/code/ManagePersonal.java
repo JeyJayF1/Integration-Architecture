@@ -16,6 +16,8 @@ public class ManagePersonal implements ManagePersonalInterface{
     MongoClient mongoClient = new MongoClient("localhost",27017);
     MongoDatabase db = mongoClient.getDatabase("CompanyDatabase2");
     MongoCollection<Document> collection = db.getCollection("salesman");
+
+    protected  int sid  ;
     public ManagePersonal(){
 
     }
@@ -37,7 +39,7 @@ public class ManagePersonal implements ManagePersonalInterface{
 
     @Override
     public void addSocialPerformanceRecord(SocialPerformanceRecord record, SalesMan salesMan) {
-        int sid = salesMan.getId();
+        this.sid = salesMan.getId();
 
         Document socialPerformanceRecord = record.toDocument();
         collection.updateOne(new Document("sid",sid), Updates.push
@@ -65,7 +67,7 @@ public class ManagePersonal implements ManagePersonalInterface{
 
     @Override
     public ArrayList<SocialPerformanceRecord> readSocialPerformanceRecord(SalesMan salesMan) {
-        int sid = salesMan.getId();
+        this.sid = salesMan.getId();
         ArrayList PerformanceRecords = new ArrayList<SocialPerformanceRecord>();
         Document salesmanDocument = collection.find(new Document("sid", sid)).first();
         ArrayList<Document> perfromanceRecordDocument = (ArrayList<Document>) salesmanDocument.get("PerformanceRecords");
@@ -78,12 +80,37 @@ public class ManagePersonal implements ManagePersonalInterface{
 
     @Override
     public SocialPerformanceRecord readLastSocialPerformanceRecord(SalesMan salesmMan) {
-        return null;
+
+        this.sid = salesmMan.getId();
+        Document salesmanDocument = collection.find(new Document("sid", sid)).first();
+        ArrayList<Document> performanceRecordDocuments = (ArrayList<Document>) salesmanDocument.get("PerformanceRecords");
+        if(performanceRecordDocuments == null || performanceRecordDocuments.isEmpty()){
+            return null;
+        }
+
+        performanceRecordDocuments.sort((doc1, doc2) -> doc2.getInteger("year").compareTo(doc1.getInteger("year"))); //Sort by year descending
+        Document latestRecord = performanceRecordDocuments.get(0); // Get the last one (latest year)
+        return toSocialPerformanceRecord(latestRecord);
     }
 
     @Override
     public SocialPerformanceRecord readByYearSocialPerformanceRecord(SalesMan salesMan, int year) {
-        return null;
+
+        this.sid = salesMan.getId();
+        Document salesmanDocument = collection.find(new Document("sid", sid)).first();
+        ArrayList<Document> performanceRecordDocuments = (ArrayList<Document>) salesmanDocument.get("PerformanceRecords");
+        if (performanceRecordDocuments == null || performanceRecordDocuments.isEmpty()) {
+            return null;
+        }
+
+        for (Document record : performanceRecordDocuments) {
+            if (record.getInteger("year") == year) {
+                return toSocialPerformanceRecord(record); // Return the matching record
+            }
+        }
+
+        return null; // No record found for the given year
+
     }
 
     public SalesMan toSalesMan(Document salesman){

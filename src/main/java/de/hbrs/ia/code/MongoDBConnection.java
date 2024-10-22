@@ -34,6 +34,13 @@ public class MongoDBConnection {
             System.out.println(record);
         }
 
+        SocialPerformanceRecord otherRecords = controller.readLastSocialPerformanceRecord(salesMan1);
+        System.out.println(otherRecords);
+
+        SocialPerformanceRecord otherRecords1 = controller.readByYearSocialPerformanceRecord(salesMan1, 2022);
+        System.out.println(otherRecords1);
+
+
 
 
 
