@@ -70,8 +70,8 @@ public class ManagePersonal implements ManagePersonalInterface{
         this.sid = salesMan.getId();
         ArrayList PerformanceRecords = new ArrayList<SocialPerformanceRecord>();
         Document salesmanDocument = collection.find(new Document("sid", sid)).first();
-        ArrayList<Document> perfromanceRecordDocument = (ArrayList<Document>) salesmanDocument.get("PerformanceRecords");
-        for (Document record: perfromanceRecordDocument){
+        ArrayList<Document> performanceRecordDocument = (ArrayList<Document>) salesmanDocument.get("PerformanceRecords");
+        for (Document record: performanceRecordDocument){
             SocialPerformanceRecord record1 = toSocialPerformanceRecord(record);
             PerformanceRecords.add(record1);
         }
