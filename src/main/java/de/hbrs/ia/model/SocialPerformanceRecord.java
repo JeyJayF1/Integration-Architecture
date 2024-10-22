@@ -2,8 +2,6 @@ package de.hbrs.ia.model;
 
 import org.bson.Document;
 
-import java.time.Year;
-import java.util.Date;
 
 public class SocialPerformanceRecord{
 
@@ -73,6 +71,10 @@ public class SocialPerformanceRecord{
     public void setIntegrity(Integer integrity) {
         this.integrity = integrity;
     }
+
+    public Integer getYear() { return year; }
+    public void setYear() { this.year = year; }
+
     public Document toDocument() {
         org.bson.Document document = new Document();
         document.append("leadership", this.leadership);
