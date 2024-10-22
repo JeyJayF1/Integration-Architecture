@@ -79,9 +79,9 @@ public class ManagePersonal implements ManagePersonalInterface{
     }
 
     @Override
-    public SocialPerformanceRecord readLastSocialPerformanceRecord(SalesMan salesmMan) {
+    public SocialPerformanceRecord readLastSocialPerformanceRecord(SalesMan salesMan) {
 
-        this.sid = salesmMan.getId();
+        this.sid = salesMan.getId();
         Document salesmanDocument = collection.find(new Document("sid", sid)).first();
         ArrayList<Document> performanceRecordDocuments = (ArrayList<Document>) salesmanDocument.get("PerformanceRecords");
         if(performanceRecordDocuments == null || performanceRecordDocuments.isEmpty()){
